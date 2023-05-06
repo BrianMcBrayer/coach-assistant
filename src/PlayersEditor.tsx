@@ -1,5 +1,5 @@
 import { Button, Col, Form, Row, Stack, Table } from "react-bootstrap";
-import { useState } from "react";
+import { createRef, useState } from "react";
 import { Player } from "./types";
 import { Container } from "react-bootstrap";
 
@@ -15,6 +15,7 @@ export default function PlayersEditor({
   getPlannedTotalRotations,
 }: Props) {
   const [newPlayerName, setNewPlayerName] = useState<string>("");
+  const newPlayerNameRef = createRef<HTMLInputElement>();
 
   const addPlayer = () => {
     setPlayers([
@@ -28,6 +29,7 @@ export default function PlayersEditor({
       },
     ]);
     setNewPlayerName("");
+    newPlayerNameRef.current?.focus();
   };
 
   const deletePlayer = (playerToDelete: Player) => {
@@ -50,9 +52,8 @@ export default function PlayersEditor({
             <thead>
               <tr>
                 <th>Name</th>
-                <th>Additional Rotations</th>
                 <th>Sitting Out</th>
-                <th>Planned Total Rotations</th>
+                <th>Rotations</th>
                 <th>Actions</th>
               </tr>
             </thead>
@@ -74,20 +75,6 @@ export default function PlayersEditor({
                     ></Form.Control>
                   </td>
                   <td>
-                    <Form.Control
-                      type="number"
-                      value={player.additionalRotations}
-                      min={0}
-                      onChange={(event) => {
-                        const updatedPlayer = {
-                          ...player,
-                          rotations: parseInt(event.target.value, 10),
-                        };
-                        updatePlayer(updatedPlayer);
-                      }}
-                    ></Form.Control>
-                  </td>
-                  <td>
                     <Form.Check
                       type="checkbox"
                       checked={player.isIncapacitated}
@@ -100,7 +87,28 @@ export default function PlayersEditor({
                       }}
                     />
                   </td>
-                  <td>{getPlannedTotalRotations(player)}</td>
+                  <td>
+                    <Container fluid>
+                      <Row>
+                        <Col>{getPlannedTotalRotations(player)}</Col>
+                        <Col>
+                          <Form.Control
+                            type="number"
+                            value={player.additionalRotations}
+                            min={0}
+                            onChange={(event) => {
+                              const updatedPlayer = {
+                                ...player,
+                                additionalRotations: parseInt(event.target.value, 10),
+                              };
+                              updatePlayer(updatedPlayer);
+                            }}
+                          ></Form.Control>
+                          <Form.Text>Additional Rotations</Form.Text>
+                        </Col>
+                      </Row>
+                    </Container>
+                  </td>
                   <td>
                     <Button onClick={() => deletePlayer(player)}>Delete</Button>
                   </td>
@@ -116,6 +124,12 @@ export default function PlayersEditor({
             type="text"
             value={newPlayerName}
             onChange={(event) => setNewPlayerName(event.target.value)}
+            onKeyDown={(event) => {
+              if (event.key === "Enter") {
+                addPlayer();
+              }
+            }}
+            ref={newPlayerNameRef}
           />
           <Form.Text>New Player Name</Form.Text>
         </Col>

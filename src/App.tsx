@@ -111,13 +111,21 @@ function App() {
                   <Col>
                     <RotationListDisplay
                       rotations={rotations}
+                      canSetRotationStatus={(rotation) =>
+                        canUpdateRotationStatus(rotation, rotations)
+                      }
                       setRotationStatus={(rotation, status) => {
-                        const newRotations = [...rotations];
-                        const rotationIndex = newRotations.findIndex(
-                          (r) => r.id === rotation.id
+                        if (
+                          !canUpdateRotationStatus(rotation, rotations) ||
+                          rotation.status === status
+                        ) {
+                          return;
+                        }
+
+                        const updatedRotations = rotations.map((r) =>
+                          r === rotation ? { ...r, status } : r
                         );
-                        newRotations[rotationIndex].status = status;
-                        setRotationsAndSaveToLocalStorage(newRotations);
+                        setRotationsAndSaveToLocalStorage(updatedRotations);
                       }}
                     />
                   </Col>
@@ -167,6 +175,25 @@ function App() {
         </Col>
       </Row>
     </Container>
+  );
+}
+
+function canUpdateRotationStatus(
+  rotation: Rotation,
+  rotations: Rotation[]
+): boolean {
+  const previousRotations = rotations.slice(0, rotations.indexOf(rotation));
+  const subsequentRotations = rotations.slice(rotations.indexOf(rotation) + 1);
+  const isPreviousRotationsComplete = previousRotations.every(
+    (rotation) => rotation.status === RotationStatus.Complete
+  );
+  const isSubsequentRotationsInProgressOrComplete = subsequentRotations.some(
+    (rotation) =>
+      rotation.status === RotationStatus.InProgress ||
+      rotation.status === RotationStatus.Complete
+  );
+  return (
+    isPreviousRotationsComplete && !isSubsequentRotationsInProgressOrComplete
   );
 }
 

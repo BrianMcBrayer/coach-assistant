@@ -3,21 +3,29 @@ import { Rotation, RotationStatus } from "./types";
 
 interface Props {
   rotation: Rotation;
+  canSetRotationStatus: boolean;
   setRotationStatus: (status: RotationStatus) => void;
 }
 
 export default function RotationDisplay({
   rotation,
+  canSetRotationStatus,
   setRotationStatus,
 }: Props) {
   return (
     <>
       {rotation.status === RotationStatus.NotStarted && (
         <Alert variant="info">
-          Rotation has not started{" "}
-          <Button onClick={() => setRotationStatus(RotationStatus.InProgress)}>
-            Start Rotation
-          </Button>
+          Rotation has not started
+          {canSetRotationStatus ? (
+            <Button
+              onClick={() => setRotationStatus(RotationStatus.InProgress)}
+            >
+              Start Rotation
+            </Button>
+          ) : (
+            <span>, waiting for previous rotations to complete</span>
+          )}
         </Alert>
       )}
       {rotation.status === RotationStatus.InProgress && (
@@ -30,10 +38,13 @@ export default function RotationDisplay({
       )}
       {rotation.status === RotationStatus.Complete && (
         <Alert variant="secondary">
-          Rotation is complete{" "}
-          <Button onClick={() => setRotationStatus(RotationStatus.NotStarted)}>
+          Rotation is complete
+          {canSetRotationStatus ? (
+            <Button onClick={() => setRotationStatus(RotationStatus.NotStarted)}>
             Reset Rotation
-          </Button>
+          </Button>) : (
+            <span>, cannot reset if a later rotation is in progress or complete</span>
+          )}
         </Alert>
       )}
       <Table>
