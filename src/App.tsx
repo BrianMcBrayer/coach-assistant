@@ -2,7 +2,17 @@ import "bootswatch/dist/pulse/bootstrap.min.css";
 import PlayersEditor from "./PlayersEditor";
 import { useEffect, useState } from "react";
 import { Player, Rotation, RotationStatus } from "./types";
-import { Button, Col, Container, Form, Row, Tab, Tabs } from "react-bootstrap";
+import {
+  Button,
+  Col,
+  Container,
+  Form,
+  Nav,
+  Navbar,
+  Row,
+  Tab,
+  Tabs,
+} from "react-bootstrap";
 import RotationListDisplay from "./RotationListDisplay";
 
 function App() {
@@ -60,12 +70,28 @@ function App() {
   }
 
   return (
-    <Container>
+    <Container fluid>
+      <Row>
+        <Col>
+          <Navbar bg="light" expand="lg">
+            <Navbar.Brand href="#home">
+              <img
+                src="/soccer_ball2.svg"
+                width={30}
+                height={30}
+                className="d-inline-block align-top"
+                alt="logo"
+              />{" "}
+              Rotation Tracker
+            </Navbar.Brand>
+          </Navbar>
+        </Col>
+      </Row>
       <Row>
         <Col>
           <Tabs defaultActiveKey="Players">
             <Tab eventKey="Players" title="Players">
-              <Container>
+              <Container fluid>
                 <Row>
                   <Col>
                     <PlayersEditor
@@ -80,7 +106,7 @@ function App() {
               </Container>
             </Tab>
             <Tab eventKey="Rotations" title="Rotations">
-              <Container>
+              <Container fluid>
                 <Row>
                   <Col>
                     <RotationListDisplay
@@ -99,7 +125,7 @@ function App() {
               </Container>
             </Tab>
             <Tab eventKey="Settings" title="Settings">
-              <Container>
+              <Container fluid>
                 <Row>
                   <Col>
                     <Form.Control

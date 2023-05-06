@@ -43,7 +43,7 @@ export default function PlayersEditor({
   };
 
   return (
-    <Container>
+    <Container fluid>
       <Row>
         <Col>
           <Table striped bordered hover>
