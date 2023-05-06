@@ -1,8 +1,8 @@
-import "bootstrap/dist/css/bootstrap.min.css";
+import "bootswatch/dist/pulse/bootstrap.min.css";
 import PlayersEditor from "./PlayersEditor";
 import { useEffect, useState } from "react";
 import { Player, Rotation, RotationStatus } from "./types";
-import { Button, Form } from "react-bootstrap";
+import { Button, Col, Container, Form, Row, Tab, Tabs } from "react-bootstrap";
 import RotationListDisplay from "./RotationListDisplay";
 
 function App() {
@@ -11,19 +11,19 @@ function App() {
   const [numberOfRotations, setNumberOfRotations] = useState<number>(8);
   const [numberOfPlayersInRotation, setNumberOfPlayersInRotation] =
     useState<number>(4);
-    const [isLoaded, setIsLoaded] = useState<boolean>(false);
+  const [isLoaded, setIsLoaded] = useState<boolean>(false);
 
-    useEffect(() => {
-      const rotationsFromLocalStorage = localStorage.getItem("rotations");
-      if (rotationsFromLocalStorage) {
-        setRotations(JSON.parse(rotationsFromLocalStorage));
-      }
-      const playersFromLocalStorage = localStorage.getItem("players");
-      if (playersFromLocalStorage) {
-        setPlayers(JSON.parse(playersFromLocalStorage));
-      }
-      setIsLoaded(true);
-    }, []);
+  useEffect(() => {
+    const rotationsFromLocalStorage = localStorage.getItem("rotations");
+    if (rotationsFromLocalStorage) {
+      setRotations(JSON.parse(rotationsFromLocalStorage));
+    }
+    const playersFromLocalStorage = localStorage.getItem("players");
+    if (playersFromLocalStorage) {
+      setPlayers(JSON.parse(playersFromLocalStorage));
+    }
+    setIsLoaded(true);
+  }, []);
 
   useEffect(() => {
     if (!isLoaded) {
@@ -51,7 +51,7 @@ function App() {
   }
 
   function resetGame() {
-    if(!window.confirm("Are you sure you want to reset the game?")) {
+    if (!window.confirm("Are you sure you want to reset the game?")) {
       return;
     }
 
@@ -60,46 +60,87 @@ function App() {
   }
 
   return (
-    <>
-      <RotationListDisplay
-        rotations={rotations}
-        setRotationStatus={(rotation, status) => {
-          const newRotations = [...rotations];
-          const rotationIndex = newRotations.findIndex(
-            (r) => r.id === rotation.id
-          );
-          newRotations[rotationIndex].status = status;
-          setRotationsAndSaveToLocalStorage(newRotations);
-        }}
-      />
-
-      <hr />
-      <PlayersEditor
-        players={players}
-        setPlayers={setPlayersAndSaveToLocalStorage}
-        getPlannedTotalRotations={(player) =>
-          numberOfRotationsPlayed(player, rotations)
-        }
-      />
-      <hr />
-      <Form.Control
-        type="number"
-        value={numberOfRotations}
-        onChange={(event) => setNumberOfRotations(parseInt(event.target.value))}
-      />
-      <Form.Text>Number of rotations</Form.Text>
-      <hr />
-      <Form.Control
-        type="number"
-        value={numberOfPlayersInRotation}
-        onChange={(event) =>
-          setNumberOfPlayersInRotation(parseInt(event.target.value))
-        }
-      />
-      <Form.Text>Number of players in each rotation</Form.Text>
-      <hr />
-      <Button variant="danger" onClick={resetGame}>Reset Game</Button>
-    </>
+    <Container>
+      <Row>
+        <Col>
+          <Tabs defaultActiveKey="Players">
+            <Tab eventKey="Players" title="Players">
+              <Container>
+                <Row>
+                  <Col>
+                    <PlayersEditor
+                      players={players}
+                      setPlayers={setPlayersAndSaveToLocalStorage}
+                      getPlannedTotalRotations={(player) =>
+                        numberOfRotationsPlayed(player, rotations)
+                      }
+                    />
+                  </Col>
+                </Row>
+              </Container>
+            </Tab>
+            <Tab eventKey="Rotations" title="Rotations">
+              <Container>
+                <Row>
+                  <Col>
+                    <RotationListDisplay
+                      rotations={rotations}
+                      setRotationStatus={(rotation, status) => {
+                        const newRotations = [...rotations];
+                        const rotationIndex = newRotations.findIndex(
+                          (r) => r.id === rotation.id
+                        );
+                        newRotations[rotationIndex].status = status;
+                        setRotationsAndSaveToLocalStorage(newRotations);
+                      }}
+                    />
+                  </Col>
+                </Row>
+              </Container>
+            </Tab>
+            <Tab eventKey="Settings" title="Settings">
+              <Container>
+                <Row>
+                  <Col>
+                    <Form.Control
+                      type="number"
+                      value={numberOfRotations}
+                      onChange={(event) =>
+                        setNumberOfRotations(parseInt(event.target.value))
+                      }
+                    />
+                    <Form.Text>Number of rotations</Form.Text>
+                    <hr />
+                  </Col>
+                </Row>
+                <Row>
+                  <Col>
+                    <Form.Control
+                      type="number"
+                      value={numberOfPlayersInRotation}
+                      onChange={(event) =>
+                        setNumberOfPlayersInRotation(
+                          parseInt(event.target.value)
+                        )
+                      }
+                    />
+                    <Form.Text>Number of players in each rotation</Form.Text>
+                    <hr />
+                  </Col>
+                </Row>
+                <Row>
+                  <Col>
+                    <Button variant="danger" onClick={resetGame}>
+                      Reset Game
+                    </Button>
+                  </Col>
+                </Row>
+              </Container>
+            </Tab>
+          </Tabs>
+        </Col>
+      </Row>
+    </Container>
   );
 }
 

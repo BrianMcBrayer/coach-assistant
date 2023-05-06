@@ -1,4 +1,4 @@
-import { Alert, Button, Table } from "react-bootstrap";
+import { Alert, Button, Col, Container, Row, Table } from "react-bootstrap";
 import { Rotation, RotationStatus } from "./types";
 
 interface Props {
@@ -11,7 +11,7 @@ export default function RotationDisplay({
   setRotationStatus,
 }: Props) {
   return (
-    <div>
+    <>
       {rotation.status === RotationStatus.NotStarted && (
         <Alert variant="info">
           Rotation has not started{" "}
@@ -54,6 +54,6 @@ export default function RotationDisplay({
           })}
         </tbody>
       </Table>
-    </div>
+    </>
   );
 }

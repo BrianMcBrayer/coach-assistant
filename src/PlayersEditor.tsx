@@ -1,6 +1,7 @@
-import { Button, Form, Table } from "react-bootstrap";
+import { Button, Col, Form, Row, Stack, Table } from "react-bootstrap";
 import { useState } from "react";
 import { Player } from "./types";
+import { Container } from "react-bootstrap";
 
 interface Props {
   players: Player[];
@@ -42,76 +43,86 @@ export default function PlayersEditor({
   };
 
   return (
-    <>
-      <Table striped bordered hover>
-        <thead>
-          <tr>
-            <th>Name</th>
-            <th>Additional Rotations</th>
-            <th>Is Incapacitated</th>
-            <th>Planned Total Rotations</th>
-            <th>Actions</th>
-          </tr>
-        </thead>
-        <tbody>
-          {players.map((player) => (
-            <tr key={player.name}>
-              <td>
-                <Form.Control
-                  type="text"
-                  className={player.isIncapacitated ? "text-danger" : ""}
-                  value={player.name}
-                  onChange={(event) => {
-                    const updatedPlayer = {
-                      ...player,
-                      name: event.target.value,
-                    };
-                    updatePlayer(updatedPlayer);
-                  }}
-                ></Form.Control>
-              </td>
-              <td>
-                <Form.Control
-                  type="number"
-                  value={player.additionalRotations}
-                  min={0}
-                  onChange={(event) => {
-                    const updatedPlayer = {
-                      ...player,
-                      rotations: parseInt(event.target.value, 10),
-                    };
-                    updatePlayer(updatedPlayer);
-                  }}
-                ></Form.Control>
-              </td>
-              <td>
-                <Form.Check
-                  type="checkbox"
-                  checked={player.isIncapacitated}
-                  onChange={(event) => {
-                    const updatedPlayer = {
-                      ...player,
-                      isIncapacitated: event.target.checked,
-                    };
-                    updatePlayer(updatedPlayer);
-                  }}
-                />
-              </td>
-              <td>{getPlannedTotalRotations(player)}</td>
-              <td>
-                <Button onClick={() => deletePlayer(player)}>Delete</Button>
-              </td>
-            </tr>
-          ))}
-        </tbody>
-      </Table>
-      <Form.Control
-        type="text"
-        placeholder="New Player Name"
-        value={newPlayerName}
-        onChange={(event) => setNewPlayerName(event.target.value)}
-      />
-      <Button onClick={addPlayer}>Add New Player</Button>
-    </>
+    <Container>
+      <Row>
+        <Col>
+          <Table striped bordered hover>
+            <thead>
+              <tr>
+                <th>Name</th>
+                <th>Additional Rotations</th>
+                <th>Sitting Out</th>
+                <th>Planned Total Rotations</th>
+                <th>Actions</th>
+              </tr>
+            </thead>
+            <tbody>
+              {players.map((player) => (
+                <tr key={player.name}>
+                  <td>
+                    <Form.Control
+                      type="text"
+                      className={player.isIncapacitated ? "text-danger" : ""}
+                      value={player.name}
+                      onChange={(event) => {
+                        const updatedPlayer = {
+                          ...player,
+                          name: event.target.value,
+                        };
+                        updatePlayer(updatedPlayer);
+                      }}
+                    ></Form.Control>
+                  </td>
+                  <td>
+                    <Form.Control
+                      type="number"
+                      value={player.additionalRotations}
+                      min={0}
+                      onChange={(event) => {
+                        const updatedPlayer = {
+                          ...player,
+                          rotations: parseInt(event.target.value, 10),
+                        };
+                        updatePlayer(updatedPlayer);
+                      }}
+                    ></Form.Control>
+                  </td>
+                  <td>
+                    <Form.Check
+                      type="checkbox"
+                      checked={player.isIncapacitated}
+                      onChange={(event) => {
+                        const updatedPlayer = {
+                          ...player,
+                          isIncapacitated: event.target.checked,
+                        };
+                        updatePlayer(updatedPlayer);
+                      }}
+                    />
+                  </td>
+                  <td>{getPlannedTotalRotations(player)}</td>
+                  <td>
+                    <Button onClick={() => deletePlayer(player)}>Delete</Button>
+                  </td>
+                </tr>
+              ))}
+            </tbody>
+          </Table>
+        </Col>
+      </Row>
+      <Row>
+        <Col>
+          <Form.Control
+            type="text"
+            value={newPlayerName}
+            onChange={(event) => setNewPlayerName(event.target.value)}
+          />
+          <Form.Text>New Player Name</Form.Text>
+        </Col>
+        <Col>
+          <Button onClick={addPlayer}>Add New Player</Button>
+        </Col>
+      </Row>
+    </Container>
   );
 }
