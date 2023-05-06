@@ -2,7 +2,7 @@ import "bootstrap/dist/css/bootstrap.min.css";
 import PlayersEditor from "./PlayersEditor";
 import { useEffect, useState } from "react";
 import { Player, Rotation, RotationStatus } from "./types";
-import { Form } from "react-bootstrap";
+import { Button, Form } from "react-bootstrap";
 import RotationListDisplay from "./RotationListDisplay";
 
 function App() {
@@ -29,7 +29,7 @@ function App() {
     if (!isLoaded) {
       return;
     }
-    
+
     setRotationsAndSaveToLocalStorage(
       populateRotations(
         rotations,
@@ -48,6 +48,15 @@ function App() {
   function setRotationsAndSaveToLocalStorage(rotations: Rotation[]) {
     localStorage.setItem("rotations", JSON.stringify(rotations));
     setRotations(rotations);
+  }
+
+  function resetGame() {
+    if(!window.confirm("Are you sure you want to reset the game?")) {
+      return;
+    }
+
+    setPlayersAndSaveToLocalStorage([]);
+    setRotationsAndSaveToLocalStorage([]);
   }
 
   return (
@@ -88,6 +97,8 @@ function App() {
         }
       />
       <Form.Text>Number of players in each rotation</Form.Text>
+      <hr />
+      <Button variant="danger" onClick={resetGame}>Reset Game</Button>
     </>
   );
 }
