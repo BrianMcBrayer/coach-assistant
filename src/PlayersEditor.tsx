@@ -22,7 +22,7 @@ export default function PlayersEditor({
       ...players,
       {
         name: newPlayerName,
-        id: Math.random().toString(),
+        id: crypto.randomUUID(),
         didPartialRotation: false,
         additionalRotations: 0,
         isIncapacitated: false,
@@ -32,8 +32,8 @@ export default function PlayersEditor({
     newPlayerNameRef.current?.focus();
   };
 
-  const deletePlayer = (playerToDelete: Player) => {
-    setPlayers(players.filter((player) => player.id !== playerToDelete.id));
+  const deletePlayer = (playerIdToDelete: string) => {
+    setPlayers(players.filter((player) => player.id !== playerIdToDelete));
   };
 
   const updatePlayer = (playerToUpdate: Player) => {
@@ -110,7 +110,7 @@ export default function PlayersEditor({
                     </Container>
                   </td>
                   <td>
-                    <Button onClick={() => deletePlayer(player)}>Delete</Button>
+                    <Button onClick={() => deletePlayer(player.id)}>Delete</Button>
                   </td>
                 </tr>
               ))}

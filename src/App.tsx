@@ -202,7 +202,7 @@ function createNextRotation(
   numberOfPlayersInRotation: number
 ): Rotation {
   const newRotation: Rotation = {
-    id: Math.random().toString(),
+    id: crypto.randomUUID(),
     status: RotationStatus.NotStarted,
     players: players
       .filter((player) => !player.isIncapacitated)
