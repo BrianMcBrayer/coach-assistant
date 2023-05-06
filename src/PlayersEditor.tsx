@@ -1,4 +1,4 @@
-import { Button, Col, Form, Row, Stack, Table } from "react-bootstrap";
+import { Button, Col, Form, Row, Table } from "react-bootstrap";
 import { createRef, useState } from "react";
 import { Player } from "./types";
 import { Container } from "react-bootstrap";

@@ -1,4 +1,4 @@
-import { Alert, Button, Col, Container, Row, Table } from "react-bootstrap";
+import { Alert, Button, Table } from "react-bootstrap";
 import { Rotation, RotationStatus } from "./types";
 
 interface Props {
