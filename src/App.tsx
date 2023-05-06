@@ -11,9 +11,26 @@ function App() {
   const [numberOfRotations, setNumberOfRotations] = useState<number>(8);
   const [numberOfPlayersInRotation, setNumberOfPlayersInRotation] =
     useState<number>(4);
+    const [isLoaded, setIsLoaded] = useState<boolean>(false);
+
+    useEffect(() => {
+      const rotationsFromLocalStorage = localStorage.getItem("rotations");
+      if (rotationsFromLocalStorage) {
+        setRotations(JSON.parse(rotationsFromLocalStorage));
+      }
+      const playersFromLocalStorage = localStorage.getItem("players");
+      if (playersFromLocalStorage) {
+        setPlayers(JSON.parse(playersFromLocalStorage));
+      }
+      setIsLoaded(true);
+    }, []);
 
   useEffect(() => {
-    setRotations(
+    if (!isLoaded) {
+      return;
+    }
+    
+    setRotationsAndSaveToLocalStorage(
       populateRotations(
         rotations,
         players,
@@ -21,7 +38,17 @@ function App() {
         numberOfPlayersInRotation
       )
     );
-  }, [players, numberOfRotations, numberOfPlayersInRotation]);
+  }, [players, numberOfRotations, numberOfPlayersInRotation, isLoaded]);
+
+  function setPlayersAndSaveToLocalStorage(players: Player[]) {
+    localStorage.setItem("players", JSON.stringify(players));
+    setPlayers(players);
+  }
+
+  function setRotationsAndSaveToLocalStorage(rotations: Rotation[]) {
+    localStorage.setItem("rotations", JSON.stringify(rotations));
+    setRotations(rotations);
+  }
 
   return (
     <>
@@ -33,12 +60,18 @@ function App() {
             (r) => r.id === rotation.id
           );
           newRotations[rotationIndex].status = status;
-          setRotations(newRotations);
+          setRotationsAndSaveToLocalStorage(newRotations);
         }}
       />
 
       <hr />
-      <PlayersEditor players={players} setPlayers={setPlayers} getPlannedTotalRotations={(player) => numberOfRotationsPlayed(player, rotations)} />
+      <PlayersEditor
+        players={players}
+        setPlayers={setPlayersAndSaveToLocalStorage}
+        getPlannedTotalRotations={(player) =>
+          numberOfRotationsPlayed(player, rotations)
+        }
+      />
       <hr />
       <Form.Control
         type="number"
